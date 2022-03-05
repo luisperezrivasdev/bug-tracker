@@ -9,7 +9,7 @@ const service = new UserService(false);
 const findAll = asyncHandler(async (req, res) => {
   const users = await service.findAll();
 
-  res.status(200).json({ data: users });
+  res.status(200).json({ users });
 });
 
 // @desc    Find user by ID
@@ -26,7 +26,7 @@ const findById = asyncHandler(async (req, res) => {
     throw err;
   }
 
-  res.status(200).json({ data: user });
+  res.status(200).json({ user });
 });
 
 // @desc    Create user
@@ -38,18 +38,20 @@ const createUser = asyncHandler(async (req, res) => {
   if (await service.findByEmail(email)) {
     const err = new Error('Email unavailable');
     err.status = 409;
+    err.field = 'email';
     throw err;
   }
 
   if (await service.findByUsername(username)) {
     const err = new Error('Username unavailable');
     err.status = 409;
+    err.field = 'username';
     throw err;
   }
 
   const user = await service.createUser(req.body);
 
-  res.status(200).json({ data: user });
+  res.status(200).json({ user });
 });
 
 module.exports = {

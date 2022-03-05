@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
@@ -24,8 +25,12 @@ import PasswordHelperText from '../../components/PasswordHelperText';
 import { SIGN_UP_FORM_SCHEMA } from '../../constants/schemas';
 import { SIGN_UP_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
+import { createUser } from '../../services/usersService';
+
 const SignUp = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -68,8 +73,19 @@ const SignUp = () => {
             <Formik
               initialValues={{ ...SIGN_UP_FORM_INITIAL_VALUES }}
               validationSchema={SIGN_UP_FORM_SCHEMA}
-              onSubmit={(values, { resetForm, setSubmitting }) => {
-                console.log(values);
+              onSubmit={async values => {
+                const { user, err } = await createUser(values);
+
+                if (user) {
+                  navigate('/login');
+                }
+
+                if (err) {
+                  setError({
+                    message: err.message,
+                    field: err.field,
+                  });
+                }
               }}
             >
               {({ values, errors, isSubmitting }) => (
@@ -106,6 +122,12 @@ const SignUp = () => {
                     sx={{ mt: 2 }}
                   />
 
+                  {error && error.field === 'email' && (
+                    <Alert onClose={() => setError(null)} severity="error">
+                      {error.message}
+                    </Alert>
+                  )}
+
                   <InputField
                     type="text"
                     name="username"
@@ -115,6 +137,12 @@ const SignUp = () => {
                     disabled={isSubmitting}
                     sx={{ mt: 2 }}
                   />
+
+                  {error && error.field === 'username' && (
+                    <Alert onClose={() => setError(null)} severity="error">
+                      {error.message}
+                    </Alert>
+                  )}
 
                   <InputField
                     type={showPassword ? 'text' : 'password'}
@@ -140,6 +168,7 @@ const SignUp = () => {
                             <IconButton
                               edge="end"
                               size="small"
+                              disabled={isSubmitting}
                               onClick={() =>
                                 values.password
                                   ? document.getElementById('password').focus()
@@ -181,7 +210,7 @@ const SignUp = () => {
             </Formik>
 
             <Box sx={{ display: 'flex', justifyContent: 'end', mt: 2 }}>
-              <Link component={RouterLink} to="/" variant="body2">
+              <Link component={RouterLink} to="/login" variant="body2">
                 Already have an account? Log In
               </Link>
             </Box>

@@ -9,6 +9,7 @@ const errorHandler = (err, req, res, next) => {
   res.json({
     error: {
       message: err.message,
+      field: err.field || undefined,
     },
   });
   console.error(err);

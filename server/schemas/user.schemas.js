@@ -26,7 +26,6 @@ const createUserSchema = Joi.object({
   email: email.required(),
   username: username.required(),
   password: password.required(),
-  role: role.required(),
 });
 
 module.exports = { findUserByIdSchema, createUserSchema };

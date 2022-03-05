@@ -104,6 +104,7 @@ const LogIn = () => {
                             <IconButton
                               edge="end"
                               size="small"
+                              disabled={isSubmitting}
                               onClick={() =>
                                 values.password
                                   ? document.getElementById('password').focus()

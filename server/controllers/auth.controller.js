@@ -8,7 +8,7 @@ const env = require('../config/environment.config');
 const login = asyncHandler(async (req, res) => {
   const user = req.user;
 
-  res.status(200).json({ data: { user } });
+  res.status(200).json({ user });
 });
 
 // @desc    Logout

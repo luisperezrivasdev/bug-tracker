@@ -21,7 +21,7 @@ const App = () => {
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<LogIn />} />
+            <Route path="login" element={<LogIn />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,7 +1,7 @@
+const cors = require('cors');
 const express = require('express');
 const passport = require('passport');
 const session = require('express-session');
-
 const passportStrategies = require('./utils/passport');
 const env = require('./config/environment.config');
 const { mongoConnect, sessionConfig } = require('./config/db.config');
@@ -13,6 +13,12 @@ const {
 mongoConnect();
 
 const app = express();
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(session(sessionConfig));
 app.use(passport.initialize());
