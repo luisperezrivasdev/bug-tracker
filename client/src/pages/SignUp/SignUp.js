@@ -81,6 +81,7 @@ const SignUp = () => {
                         name="firstName"
                         label="First Name"
                         autoComplete="off"
+                        disabled={isSubmitting}
                       />
                     </Grid>
 
@@ -90,6 +91,7 @@ const SignUp = () => {
                         name="lastName"
                         label="Last Name"
                         autoComplete="off"
+                        disabled={isSubmitting}
                       />
                     </Grid>
                   </Grid>
@@ -100,6 +102,7 @@ const SignUp = () => {
                     label="Email"
                     autoComplete="off"
                     fullWidth
+                    disabled={isSubmitting}
                     sx={{ mt: 2 }}
                   />
 
@@ -109,6 +112,7 @@ const SignUp = () => {
                     label="Username"
                     autoComplete="off"
                     fullWidth
+                    disabled={isSubmitting}
                     sx={{ mt: 2 }}
                   />
 
@@ -120,6 +124,7 @@ const SignUp = () => {
                     autoComplete="off"
                     signInPasswordHelper={true}
                     fullWidth
+                    disabled={isSubmitting}
                     sx={{ mt: 2 }}
                     InputProps={{
                       endAdornment: (

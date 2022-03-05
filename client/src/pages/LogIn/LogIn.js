@@ -78,6 +78,7 @@ const LogIn = () => {
                     label="Username"
                     autoComplete="off"
                     fullWidth
+                    disabled={isSubmitting}
                   />
 
                   <InputField
@@ -87,6 +88,7 @@ const LogIn = () => {
                     label="Password"
                     autoComplete="off"
                     fullWidth
+                    disabled={isSubmitting}
                     sx={{ mt: 2 }}
                     InputProps={{
                       endAdornment: (
