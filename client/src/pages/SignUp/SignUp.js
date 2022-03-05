@@ -27,6 +27,8 @@ import { SIGN_UP_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
 import { createUser } from '../../services/usersService';
 
+import { toast } from 'react-toastify';
+
 const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
@@ -77,6 +79,15 @@ const SignUp = () => {
                 const { user, err } = await createUser(values);
 
                 if (user) {
+                  toast.success(`User ${user.username} created successfully`, {
+                    position: 'top-right',
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  });
                   navigate('/login');
                 }
 

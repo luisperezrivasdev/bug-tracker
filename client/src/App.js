@@ -6,6 +6,9 @@ import LogIn from './pages/LogIn';
 import SignUp from './pages/SignUp';
 import NotFound from './pages/NotFound';
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 let theme = createTheme({
   palette: {
     mode: 'light',
@@ -25,6 +28,18 @@ const App = () => {
             <Route path="signup" element={<SignUp />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <ToastContainer
+            position="top-right"
+            theme="colored"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </BrowserRouter>
       </ThemeProvider>
     </>

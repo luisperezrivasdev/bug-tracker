@@ -36,14 +36,14 @@ const createUser = asyncHandler(async (req, res) => {
   const { email, username } = req.body;
 
   if (await service.findByEmail(email)) {
-    const err = new Error('Email unavailable');
+    const err = new Error('Email already registered');
     err.status = 409;
     err.field = 'email';
     throw err;
   }
 
   if (await service.findByUsername(username)) {
-    const err = new Error('Username unavailable');
+    const err = new Error('Username already registered');
     err.status = 409;
     err.field = 'username';
     throw err;
