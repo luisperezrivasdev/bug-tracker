@@ -29,7 +29,7 @@ import { SIGN_UP_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 import { createUser } from '../../services/usersService';
 
 // Config
-import { successToast } from '../../config/toast';
+import { successToast } from '../../config/Toast';
 
 const SignUp = () => {
   const navigate = useNavigate();

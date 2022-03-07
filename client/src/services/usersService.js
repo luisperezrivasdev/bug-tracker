@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { errorToast } from '../config/toast';
+import { errorToast } from '../config/Toast';
 
 const baseUrl = 'http://localhost:5000/api/users';
 
