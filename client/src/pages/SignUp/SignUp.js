@@ -32,7 +32,10 @@ import { toast } from 'react-toastify';
 const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState({
+    message: '',
+    field: '',
+  });
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -130,11 +133,15 @@ const SignUp = () => {
                     autoComplete="off"
                     fullWidth
                     disabled={isSubmitting}
+                    error={error.field === 'email' ? true : false}
                     sx={{ mt: 2 }}
                   />
 
                   {error && error.field === 'email' && (
-                    <Alert onClose={() => setError(null)} severity="error">
+                    <Alert
+                      onClose={() => setError({ message: '', field: '' })}
+                      severity="error"
+                    >
                       {error.message}
                     </Alert>
                   )}
@@ -146,11 +153,15 @@ const SignUp = () => {
                     autoComplete="off"
                     fullWidth
                     disabled={isSubmitting}
+                    error={error.field === 'username' ? true : false}
                     sx={{ mt: 2 }}
                   />
 
                   {error && error.field === 'username' && (
-                    <Alert onClose={() => setError(null)} severity="error">
+                    <Alert
+                      onClose={() => setError({ message: '', field: '' })}
+                      severity="error"
+                    >
                       {error.message}
                     </Alert>
                   )}
