@@ -25,14 +25,16 @@ import PasswordHelperText from '../../components/PasswordHelperText';
 import { SIGN_UP_FORM_SCHEMA } from '../../constants/schemas';
 import { SIGN_UP_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
+// Services
 import { createUser } from '../../services/usersService';
 
-import { toast } from 'react-toastify';
+// Config
+import { successToast } from '../../config/toast';
 
 const SignUp = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState({
+  const [fieldError, setFieldError] = useState({
     message: '',
     field: '',
   });
@@ -78,31 +80,25 @@ const SignUp = () => {
             <Formik
               initialValues={{ ...SIGN_UP_FORM_INITIAL_VALUES }}
               validationSchema={SIGN_UP_FORM_SCHEMA}
-              onSubmit={async values => {
+              onSubmit={async (values, { resetForm, setSubmitting }) => {
                 const { user, err } = await createUser(values);
 
                 if (user) {
-                  toast.success(`User ${user.username} created successfully`, {
-                    position: 'top-right',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                  });
+                  successToast(`User ${user.username} created successfully`);
+                  setSubmitting(false);
+                  resetForm();
                   navigate('/login');
                 }
 
-                if (err) {
-                  setError({
+                if (err && err.status === 409) {
+                  setFieldError({
                     message: err.message,
-                    field: err.field,
+                    field: err.message.split(' ')[0],
                   });
                 }
               }}
             >
-              {({ values, errors, isSubmitting }) => (
+              {({ values, errors, isSubmitting, handleSubmit }) => (
                 <Form>
                   <Grid container columnSpacing={2}>
                     <Grid item xs={6}>
@@ -133,16 +129,16 @@ const SignUp = () => {
                     autoComplete="off"
                     fullWidth
                     disabled={isSubmitting}
-                    error={error.field === 'email' ? true : false}
+                    error={fieldError.field === 'Email' ? true : false}
                     sx={{ mt: 2 }}
                   />
 
-                  {error && error.field === 'email' && (
+                  {fieldError && fieldError.field === 'Email' && (
                     <Alert
-                      onClose={() => setError({ message: '', field: '' })}
+                      onClose={() => setFieldError({ message: '', field: '' })}
                       severity="error"
                     >
-                      {error.message}
+                      {fieldError.message}
                     </Alert>
                   )}
 
@@ -153,16 +149,16 @@ const SignUp = () => {
                     autoComplete="off"
                     fullWidth
                     disabled={isSubmitting}
-                    error={error.field === 'username' ? true : false}
+                    error={fieldError.field === 'Username' ? true : false}
                     sx={{ mt: 2 }}
                   />
 
-                  {error && error.field === 'username' && (
+                  {fieldError && fieldError.field === 'Username' && (
                     <Alert
-                      onClose={() => setError({ message: '', field: '' })}
+                      onClose={() => setFieldError({ message: '', field: '' })}
                       severity="error"
                     >
-                      {error.message}
+                      {fieldError.message}
                     </Alert>
                   )}
 
@@ -224,6 +220,10 @@ const SignUp = () => {
                     loading={isSubmitting}
                     endIcon={<ChevronRightIcon />}
                     sx={{ textTransform: 'none', mt: 4 }}
+                    onClick={() => {
+                      setFieldError({ message: '', field: '' });
+                      handleSubmit();
+                    }}
                   >
                     Sign Up
                   </LoadingButton>
