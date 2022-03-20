@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
+import Alert from '@mui/material/Alert';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Container from '@mui/material/Container';
@@ -22,8 +23,19 @@ import InputField from '../../components/InputField';
 import { LOG_IN_FORM_SCHEMA } from '../../constants/schemas';
 import { LOG_IN_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
+// Services
+import { login } from '../../services/auth';
+
+// Config
+import { successToast } from '../../config/Toast';
+
 const LogIn = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState({
+    isError: false,
+    message: '',
+  });
 
   const handleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -66,8 +78,21 @@ const LogIn = () => {
             <Formik
               initialValues={{ ...LOG_IN_FORM_INITIAL_VALUES }}
               validationSchema={LOG_IN_FORM_SCHEMA}
-              onSubmit={(values, { resetForm, setSubmitting }) => {
-                console.log(values);
+              onSubmit={async (values, { resetForm, setSubmitting }) => {
+                const { user, err } = await login(values);
+
+                if (user) {
+                  setSubmitting(false);
+                  resetForm();
+                  navigate('/');
+                }
+
+                if (err && err.status === 401) {
+                  setAuthError({
+                    isError: true,
+                    message: 'Invalid credentials',
+                  });
+                }
               }}
             >
               {({ values, isSubmitting }) => (
@@ -79,6 +104,7 @@ const LogIn = () => {
                     autoComplete="off"
                     fullWidth
                     disabled={isSubmitting}
+                    error={authError.isError}
                   />
 
                   <InputField
@@ -89,6 +115,7 @@ const LogIn = () => {
                     autoComplete="off"
                     fullWidth
                     disabled={isSubmitting}
+                    error={authError.isError}
                     sx={{ mt: 2 }}
                     InputProps={{
                       endAdornment: (
@@ -123,6 +150,18 @@ const LogIn = () => {
                     }}
                   />
 
+                  {authError.isError && (
+                    <Alert
+                      onClose={() =>
+                        setAuthError({ isError: false, message: '' })
+                      }
+                      severity="error"
+                      sx={{ mt: 2 }}
+                    >
+                      {authError.message}
+                    </Alert>
+                  )}
+
                   <LoadingButton
                     type="submit"
                     variant="contained"
@@ -131,7 +170,10 @@ const LogIn = () => {
                     fullWidth
                     loading={isSubmitting}
                     endIcon={<ChevronRightIcon />}
-                    sx={{ textTransform: 'none', mt: 4 }}
+                    sx={{
+                      textTransform: 'none',
+                      mt: authError.isError ? 2 : 4,
+                    }}
                   >
                     Log In
                   </LoadingButton>

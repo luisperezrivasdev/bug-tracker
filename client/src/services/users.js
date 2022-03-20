@@ -7,7 +7,7 @@ const baseUrl = 'http://localhost:5000/api/users';
 export const createUser = async user => {
   try {
     const res = await axios.post(baseUrl, user);
-    return { user: res.data.user };
+    return { user: res.data.user, err: null };
   } catch (err) {
     if (err.response) {
       const status = err.response.status;

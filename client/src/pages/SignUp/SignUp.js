@@ -26,7 +26,7 @@ import { SIGN_UP_FORM_SCHEMA } from '../../constants/schemas';
 import { SIGN_UP_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
 // Services
-import { createUser } from '../../services/usersService';
+import { createUser } from '../../services/users';
 
 // Config
 import { successToast } from '../../config/Toast';
@@ -133,7 +133,7 @@ const SignUp = () => {
                     sx={{ mt: 2 }}
                   />
 
-                  {fieldError && fieldError.field === 'Email' && (
+                  {fieldError.field === 'Email' && (
                     <Alert
                       onClose={() => setFieldError({ message: '', field: '' })}
                       severity="error"
@@ -153,7 +153,7 @@ const SignUp = () => {
                     sx={{ mt: 2 }}
                   />
 
-                  {fieldError && fieldError.field === 'Username' && (
+                  {fieldError.field === 'Username' && (
                     <Alert
                       onClose={() => setFieldError({ message: '', field: '' })}
                       severity="error"
