@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
@@ -23,14 +23,11 @@ import InputField from '../../components/InputField';
 import { LOG_IN_FORM_SCHEMA } from '../../constants/schemas';
 import { LOG_IN_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
-// Services
-import { login } from '../../services/auth';
-
-// Config
-import { successToast } from '../../config/Toast';
+// Context
+import useAuth from '../../contexts/useAuth';
 
 const LogIn = () => {
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState({
     isError: false,
@@ -84,7 +81,6 @@ const LogIn = () => {
                 if (user) {
                   setSubmitting(false);
                   resetForm();
-                  navigate('/');
                 }
 
                 if (err && err.status === 401) {

@@ -4,7 +4,7 @@ import { errorToast } from '../config/Toast';
 
 const baseUrl = 'http://localhost:5000/api/users';
 
-export const createUser = async user => {
+const createUser = async user => {
   try {
     const res = await axios.post(baseUrl, user);
     return { user: res.data.user, err: null };
@@ -38,3 +38,7 @@ export const createUser = async user => {
     }
   }
 };
+
+const usersApi = { createUser };
+
+export default usersApi;
