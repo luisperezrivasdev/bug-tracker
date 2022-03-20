@@ -2,6 +2,15 @@ const asyncHandler = require('express-async-handler');
 
 const env = require('../config/environment.config');
 
+// @desc    Me
+// @route   Post /api/auth/me
+// @access  Private
+const me = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  res.status(200).json({ user });
+});
+
 // @desc    Login
 // @route   Post /api/auth/login
 // @access  Public
@@ -22,4 +31,4 @@ const logout = asyncHandler(async (req, res) => {
   res.status(200).end();
 });
 
-module.exports = { login, logout };
+module.exports = { me, login, logout };
