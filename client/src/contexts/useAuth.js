@@ -13,8 +13,6 @@ import authApi from '../api/auth';
 const AuthContext = createContext({
   user: null,
   loading: true,
-  login: () => {},
-  logout: () => {},
 });
 
 export const AuthProvider = ({ children }) => {
@@ -24,49 +22,24 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     async function getCurrentUser() {
-      const res = await authApi.me();
-
-      setLoading(false);
-
-      if (res.user) {
-        setUser(res.user);
-        navigate('/');
+      try {
+        const user = await authApi.me();
+        setLoading(false);
+        if (user) {
+          setUser(user);
+        }
+      } catch (err) {
+        setLoading(err);
       }
     }
 
     getCurrentUser();
   }, [navigate]);
 
-  const login = async user => {
-    const res = await authApi.login(user);
-
-    if (res.user) {
-      setUser(res.user);
-    }
-
-    if (res.err) {
-      return { err: res.err };
-    }
-  };
-
-  const logout = async () => {
-    const res = await authApi.logout();
-
-    if (res.user) {
-      setUser(null);
-    }
-
-    if (res.err) {
-      return { err: res.err };
-    }
-  };
-
   const values = useMemo(
     () => ({
       user,
       loading,
-      login,
-      logout,
     }),
     [user, loading]
   );

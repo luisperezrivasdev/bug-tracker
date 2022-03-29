@@ -8,7 +8,11 @@ const env = require('../config/environment.config');
 const me = asyncHandler(async (req, res) => {
   const user = req.user;
 
-  res.status(200).json({ user });
+  if (user) {
+    res.status(200).json({ user });
+  } else {
+    res.status(200).end();
+  }
 });
 
 // @desc    Login

@@ -20,7 +20,7 @@ const App = () => {
 
             <Route path="login" element={<PublicRoute component={LogIn} />} />
 
-            <Route path="signup" element={<SignUp />} />
+            <Route path="signup" element={<PublicRoute component={SignUp} />} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>

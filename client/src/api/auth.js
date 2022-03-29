@@ -11,33 +11,19 @@ const me = async () => {
       {},
       { withCredentials: true }
     );
-    return { user: res.data.user, err: null };
+    return res.data.user;
   } catch (err) {
     if (err.response) {
       const status = err.response.status;
-      const message = err.response.data.error.message;
-
       if (status === 500) errorToast('Internal server error');
 
-      return {
-        user: null,
-        err: {
-          status,
-          message,
-        },
-      };
+      throw err.response;
     } else if (err.request) {
       errorToast('Error communicating with server');
-      return {
-        user: null,
-        err: null,
-      };
+      throw err.request;
     } else {
       errorToast('An unexpected error has occured');
-      return {
-        user: null,
-        err: null,
-      };
+      throw err;
     }
   }
 };
@@ -47,34 +33,20 @@ const login = async user => {
     const res = await axios.post(`${baseUrl}/login`, user, {
       withCredentials: true,
     });
-    return { user: res.data.user, err: null };
+    return res.data.user;
   } catch (err) {
     if (err.response) {
       const status = err.response.status;
-      const message = err.response.data.error.message;
-
       if (status === 400) errorToast('Bad request');
       if (status === 500) errorToast('Internal server error');
 
-      return {
-        user: null,
-        err: {
-          status,
-          message,
-        },
-      };
+      throw err.response;
     } else if (err.request) {
       errorToast('Error communicating with server');
-      return {
-        user: null,
-        err: null,
-      };
+      throw err.request;
     } else {
       errorToast('An unexpected error has occured');
-      return {
-        user: null,
-        err: null,
-      };
+      throw err;
     }
   }
 };
@@ -88,30 +60,18 @@ const logout = async () => {
         withCredentials: true,
       }
     );
-    return { err: null };
   } catch (err) {
     if (err.response) {
       const status = err.response.status;
-      const message = err.response.data.error.message;
-
       if (status === 500) errorToast('Internal server error');
 
-      return {
-        err: {
-          status,
-          message,
-        },
-      };
+      throw err.response;
     } else if (err.request) {
       errorToast('Error communicating with server');
-      return {
-        err: null,
-      };
+      throw err.request;
     } else {
       errorToast('An unexpected error has occured');
-      return {
-        err: null,
-      };
+      throw err;
     }
   }
 };

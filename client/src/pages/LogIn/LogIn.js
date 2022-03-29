@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Alert from '@mui/material/Alert';
@@ -23,11 +23,11 @@ import InputField from '../../components/InputField';
 import { LOG_IN_FORM_SCHEMA } from '../../constants/schemas';
 import { LOG_IN_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
-// Context
-import useAuth from '../../contexts/useAuth';
+// Auth
+import authApi from '../../api/auth';
 
 const LogIn = () => {
-  const { login } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState({
     isError: false,
@@ -76,18 +76,18 @@ const LogIn = () => {
               initialValues={{ ...LOG_IN_FORM_INITIAL_VALUES }}
               validationSchema={LOG_IN_FORM_SCHEMA}
               onSubmit={async (values, { resetForm, setSubmitting }) => {
-                const { user, err } = await login(values);
-
-                if (user) {
+                try {
+                  const user = await authApi.login(values);
                   setSubmitting(false);
                   resetForm();
-                }
-
-                if (err && err.status === 401) {
-                  setAuthError({
-                    isError: true,
-                    message: 'Invalid credentials',
-                  });
+                  navigate('/');
+                } catch (err) {
+                  if (err.status === 401) {
+                    setAuthError({
+                      isError: true,
+                      message: 'Invalid credentials',
+                    });
+                  }
                 }
               }}
             >

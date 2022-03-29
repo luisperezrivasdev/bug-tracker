@@ -81,20 +81,19 @@ const SignUp = () => {
               initialValues={{ ...SIGN_UP_FORM_INITIAL_VALUES }}
               validationSchema={SIGN_UP_FORM_SCHEMA}
               onSubmit={async (values, { resetForm, setSubmitting }) => {
-                const { user, err } = await usersApi.createUser(values);
-
-                if (user) {
+                try {
+                  const user = await usersApi.createUser(values);
                   successToast(`User ${user.username} created successfully`);
                   setSubmitting(false);
                   resetForm();
                   navigate('/login');
-                }
-
-                if (err && err.status === 409) {
-                  setFieldError({
-                    message: err.message,
-                    field: err.message.split(' ')[0],
-                  });
+                } catch (err) {
+                  if (err.status === 409) {
+                    setFieldError({
+                      message: err.message,
+                      field: err.message.split(' ')[0],
+                    });
+                  }
                 }
               }}
             >
