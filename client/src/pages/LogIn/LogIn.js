@@ -77,7 +77,8 @@ const LogIn = () => {
               validationSchema={LOG_IN_FORM_SCHEMA}
               onSubmit={async (values, { resetForm, setSubmitting }) => {
                 try {
-                  const user = await authApi.login(values);
+                  // const user = await authApi.login(values);
+                  await authApi.login(values);
                   setSubmitting(false);
                   resetForm();
                   navigate('/');
