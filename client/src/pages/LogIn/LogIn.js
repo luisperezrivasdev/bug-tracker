@@ -23,11 +23,8 @@ import InputField from '../../components/InputField';
 import { LOG_IN_FORM_SCHEMA } from '../../constants/schemas';
 import { LOG_IN_FORM_INITIAL_VALUES } from '../../constants/initialValues';
 
-// Services
-import { login } from '../../services/auth';
-
-// Config
-import { successToast } from '../../config/Toast';
+// Auth
+import authApi from '../../api/auth';
 
 const LogIn = () => {
   const navigate = useNavigate();
@@ -79,19 +76,19 @@ const LogIn = () => {
               initialValues={{ ...LOG_IN_FORM_INITIAL_VALUES }}
               validationSchema={LOG_IN_FORM_SCHEMA}
               onSubmit={async (values, { resetForm, setSubmitting }) => {
-                const { user, err } = await login(values);
-
-                if (user) {
+                try {
+                  // const user = await authApi.login(values);
+                  await authApi.login(values);
                   setSubmitting(false);
                   resetForm();
                   navigate('/');
-                }
-
-                if (err && err.status === 401) {
-                  setAuthError({
-                    isError: true,
-                    message: 'Invalid credentials',
-                  });
+                } catch (err) {
+                  if (err.status === 401) {
+                    setAuthError({
+                      isError: true,
+                      message: 'Invalid credentials',
+                    });
+                  }
                 }
               }}
             >

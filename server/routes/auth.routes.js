@@ -8,7 +8,7 @@ const { me, login, logout } = require('../controllers/auth.controller');
 
 const router = express.Router();
 
-router.post('/me', isAuthenticated, me);
+router.post('/me', me);
 
 router.post(
   '/login',
